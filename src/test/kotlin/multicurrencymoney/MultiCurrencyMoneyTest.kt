@@ -1,5 +1,7 @@
 package multicurrencymoney
 
+import org.example.multicurrencymoney.Bank
+import org.example.multicurrencymoney.Expression
 import org.example.multicurrencymoney.Money
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,24 +12,17 @@ class MultiCurrencyMoneyTest {
 
     /*
     [] $ 5 + 10 CHF = $10 if rate is 2:1
-
-    [v] $5 * 2 = $10
-
-    [v] Make amount private
-    [v] Dollar side-effects?
-    [] Money rounding?
-    [v] equals()
-    [] equals null
-    [] equals other obj
-    [] hashCode()
-    [v] 5 CHF * 2 = 10 CHF
-    [v] Dollar/Franc duplication
-    [v] Common equals
-    [] Common times
-    [v] Compare francs vs dollars
-    [v] Currency
-    [v] Delete testFrancMultiplication?
+    [v] $5  + $5 = $10
      */
+
+    @Test
+    fun simpleAddition() {
+        val five = Money.dollar(5)
+        val sum: Expression = five.plus(five)
+        val bank = Bank()
+        val reduced = bank.reduce(sum, "USD")
+        assertEquals(Money.dollar(10), reduced)
+    }
 
     @Test
     fun dollarMultiplication() {
