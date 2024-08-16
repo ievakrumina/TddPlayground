@@ -2,7 +2,7 @@ package org.example.multicurrencymoney
 
 
 open class Money(initialValue: Int, protected val currency: String): Expression {
-    protected var amount: Int = initialValue
+    var amount: Int = initialValue
 
     fun currency(): String = currency
 
@@ -20,20 +20,34 @@ open class Money(initialValue: Int, protected val currency: String): Expression 
         return amount.toString() + " " + currency
     }
 
-    fun plus(addition: Money): Expression {
-        return Money(amount + addition.amount, currency)
+    fun plus(addend: Money): Expression {
+        return Sum(this, addend)
     }
 
     companion object {
         fun dollar(initialValue: Int) = Money(initialValue, "USD")
         fun franc(initialValue: Int) = Money(initialValue, "CHF")
     }
+
+    override fun reduce(to: String) = this
 }
 
-interface Expression
+interface Expression {
+    fun reduce(to: String): Money
+}
 
 class Bank {
     fun reduce(source:Expression, to: String): Money {
-        return Money.dollar(10)
+        return source.reduce(to)
     }
+}
+
+class Sum( 
+    val augend: Money,
+    val addend: Money
+): Expression {
+   override fun reduce(to: String): Money {
+       val amount = augend.amount + addend.amount
+       return Money(amount, to)
+   }
 }
