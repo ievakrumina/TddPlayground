@@ -69,4 +69,17 @@ class MultiCurrencyMoneyTest {
         assertEquals("CHF", Money.franc(1).currency())
     }
 
+    @Test
+    fun reduceMoneyDifferentCurrency() {
+        val bank = Bank()
+        bank.addRate("CHF", "USD", 2)
+        val result = bank.reduce(Money.franc(2), "USD")
+        assertEquals(Money.dollar(1), result)
+    }
+
+    @Test
+    fun identityRate() {
+        assertEquals(1, Bank().getRate("USD", "USD"))
+    }
+
 }
