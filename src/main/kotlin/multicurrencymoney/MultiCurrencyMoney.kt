@@ -15,7 +15,7 @@ open class Money(initialValue: Int, protected val currency: String): Expression 
                 && currency == money.currency()
     }
 
-    fun times(multiplier:Int): Money {
+    fun times(multiplier:Int): Expression {
         return Money(amount * multiplier, currency)
     }
 
@@ -23,7 +23,7 @@ open class Money(initialValue: Int, protected val currency: String): Expression 
         return amount.toString() + " " + currency
     }
 
-    fun plus(addend: Money): Expression {
+    override fun plus(addend: Expression): Expression {
         return Sum(this, addend)
     }
 
@@ -40,6 +40,7 @@ open class Money(initialValue: Int, protected val currency: String): Expression 
 
 interface Expression {
     fun reduce(bank: Bank, to: String): Money
+    fun plus(addend: Expression): Expression
 }
 
 class Bank {
@@ -58,11 +59,15 @@ class Bank {
 }
 
 class Sum( 
-    val augend: Money,
-    val addend: Money
+    val augend: Expression,
+    val addend: Expression
 ): Expression {
    override fun reduce(bank: Bank, to: String): Money {
-       val amount = augend.amount + addend.amount
+       val amount = augend.reduce(bank, to).amount + addend.reduce(bank, to).amount
        return Money(amount, to)
    }
+
+    override fun plus(addend: Expression): Expression {
+        TODO("Not yet implemented")
+    }
 }
