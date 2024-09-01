@@ -23,9 +23,11 @@ class FizzBuzzTest {
     @Test
     fun shouldReturnFizz_whenInputMultipleOfThree() {
         assertEquals("Fizz", fizzBuzz(3))
+        assertEquals("Fizz", fizzBuzz(3*2))
+        assertEquals("Fizz", fizzBuzz(3*3))
     }
 
     private fun fizzBuzz(number: Int): String {
-        return if (number == 3) "Fizz" else number.toString()
+        return if (number % 3 == 0 && number != 0) "Fizz" else number.toString()
     }
 }
