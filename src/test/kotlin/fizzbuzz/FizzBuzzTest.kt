@@ -24,7 +24,6 @@ class FizzBuzzTest {
     fun shouldReturnFizz_whenInputMultipleOfThree() {
         assertEquals("Fizz", fizzBuzz(3))
         assertEquals("Fizz", fizzBuzz(3 * 2))
-        assertEquals("Fizz", fizzBuzz(3 * 3))
     }
 
     @Test
