@@ -15,11 +15,12 @@ class FizzBuzzTest {
 
     @Test
     fun shouldReturnNumberAsString_whenInputIsNumber() {
-
+        assertEquals("0", fizzBuzz(0))
         assertEquals("1", fizzBuzz(1))
+        assertEquals("2", fizzBuzz(2))
     }
 
     private fun fizzBuzz(number: Int): String {
-        return "1"
+        return number.toString()
     }
 }
