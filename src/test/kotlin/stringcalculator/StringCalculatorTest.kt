@@ -24,9 +24,9 @@ class StringCalculatorTest {
      *
      * 3. Allow the add method to handle newlines as separators, instead of comas
      * [v]“1,2\n3” should return “6”
-     * “2,\n3” is invalid, but no need to clarify it with the program
+     * [v]“2,\n3” is invalid, but no need to clarify it with the program
      *
-     * 4. Add validation to not to allow a separator at the end
+     * [v]4. Add validation to not to allow a separator at the end
      * For example “1,2,” should return an error (or throw an exception)
      *
      * 5. Allow the add method to handle different delimiters
@@ -82,7 +82,8 @@ class StringCalculatorTest {
 
         @JvmStatic
         fun sourceWithError() = listOf(
-            Arguments.of("Cannot use two separators in row", "1,\n2"),
+            Arguments.of("Not a number", "1,\n2"),
+            Arguments.of("Not a number", "1,2,"),
         )
     }
 
@@ -96,7 +97,7 @@ class StringCalculatorTest {
                         try {
                             it.toInt()
                         } catch(e: NumberFormatException) {
-                            throw Throwable("Cannot use two separators in row")
+                            throw Throwable("Not a number")
                         }
                     }
 
