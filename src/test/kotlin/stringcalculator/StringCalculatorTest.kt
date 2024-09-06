@@ -33,8 +33,8 @@ class StringCalculatorTest {
      *
      * To change the delimiter, the beginning of the input will contain a separate line that looks like this:
      * //[delimiter]\n[numbers]
-     * “//;\n1;3” should return “4”
-     * “//|\n1|2|3” should return “6”
+     * [v]“//;\n1;3” should return “4”
+     * [v]“//|\n1|2|3” should return “6”
      * “//sep\n2sep5” should return “7”
      * “//|\n1|2,3” is invalid and should return an error (or throw an exception) with the message “‘|’ expected
      * but ‘,’ found at position 3.”
@@ -70,16 +70,16 @@ class StringCalculatorTest {
 
     @Test
     fun shouldReturnSpecificDelimiter_whenDefinedInString() {
-        assertEquals("", getDelimiter(""))
-        assertEquals("", getDelimiter("1"))
-        assertEquals("", getDelimiter(","))
+        assertEquals(",", getDelimiter(""))
+        assertEquals(",", getDelimiter("1"))
+        assertEquals(",", getDelimiter(","))
         assertEquals(";", getDelimiter("//;\n"))
     }
 
     private fun getDelimiter(input: String): String {
         return when {
             input.startsWith("//") -> input[2].toString()
-            else -> ""
+            else -> ","
         }
     }
 
@@ -93,7 +93,8 @@ class StringCalculatorTest {
             Arguments.of(4, "2,2"),
             Arguments.of(5, "1,1,1,1,1"),
             Arguments.of(6, "1,2\n3"),
-            //Arguments.of(4, "//;\n1;3"),
+            Arguments.of(4, "//;\n1;3"),
+            Arguments.of(6, "//|\n1|2|3"),
         )
 
         @JvmStatic
@@ -107,7 +108,9 @@ class StringCalculatorTest {
         return when {
             number == "" -> 0
             else -> {
-                val inputToList = number.split("[,\n]".toRegex())
+                val delimiter = getDelimiter(input = number)
+                val stripedNumber = number.removePrefix("//$delimiter\n")
+                val inputToList = stripedNumber.split("[$delimiter\n]".toRegex())
                 inputToList
                     .sumOf {
                         try {
