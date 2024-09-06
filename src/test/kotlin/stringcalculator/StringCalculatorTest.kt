@@ -68,6 +68,21 @@ class StringCalculatorTest {
         assertEquals(expectedResult, exception.message)
     }
 
+    @Test
+    fun shouldReturnSpecificDelimiter_whenDefinedInString() {
+        assertEquals("", getDelimiter(""))
+        assertEquals("", getDelimiter("1"))
+        assertEquals("", getDelimiter(","))
+        assertEquals(";", getDelimiter("//;\n"))
+    }
+
+    private fun getDelimiter(input: String): String {
+        return when {
+            input.startsWith("//") -> input[2].toString()
+            else -> ""
+        }
+    }
+
     companion object {
         @JvmStatic
         fun source() = listOf(
@@ -78,6 +93,7 @@ class StringCalculatorTest {
             Arguments.of(4, "2,2"),
             Arguments.of(5, "1,1,1,1,1"),
             Arguments.of(6, "1,2\n3"),
+            //Arguments.of(4, "//;\n1;3"),
         )
 
         @JvmStatic
