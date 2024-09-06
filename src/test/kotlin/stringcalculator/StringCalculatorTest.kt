@@ -90,15 +90,16 @@ class StringCalculatorTest {
         return when {
             number == "" -> 0
             else -> {
-                try {
-                    number.toInt()
-                } catch(e: NumberFormatException) {
-                    val inputToList = number.split("[,\n]".toRegex())
-                        if (inputToList.contains("")) {
+                val inputToList = number.split("[,\n]".toRegex())
+                inputToList
+                    .sumOf {
+                        try {
+                            it.toInt()
+                        } catch(e: NumberFormatException) {
                             throw Throwable("Cannot use two separators in row")
                         }
-                        inputToList.sumOf { it.toInt() }
-                }
+                    }
+
             }
         }
     }
