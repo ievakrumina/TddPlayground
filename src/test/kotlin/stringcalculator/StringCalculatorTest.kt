@@ -3,6 +3,7 @@ package stringcalculator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
@@ -57,6 +58,16 @@ class StringCalculatorTest {
         assertEquals(expectedResult, add(number = input))
     }
 
+    @ParameterizedTest(name =  "Should throw error {0}, when input is {1}")
+    @MethodSource("sourceWithError")
+    fun testAddReturnsError(expectedResult: String, input: String) {
+
+        val exception = assertThrows<Throwable> {
+            add(input)
+        }
+        assertEquals(expectedResult, exception.message)
+    }
+
     companion object {
         @JvmStatic
         fun source() = listOf(
@@ -67,7 +78,11 @@ class StringCalculatorTest {
             Arguments.of(4, "2,2"),
             Arguments.of(5, "1,1,1,1,1"),
             Arguments.of(6, "1,2\n3"),
+        )
 
+        @JvmStatic
+        fun sourceWithError() = listOf(
+            Arguments.of("Cannot use two separators in row", "1,\n2"),
         )
     }
 
@@ -78,7 +93,11 @@ class StringCalculatorTest {
                 try {
                     number.toInt()
                 } catch(e: NumberFormatException) {
-                    number.split("[,\n]".toRegex()).sumOf { it.toInt() }
+                    val inputToList = number.split("[,\n]".toRegex())
+                        if (inputToList.contains("")) {
+                            throw Throwable("Cannot use two separators in row")
+                        }
+                        inputToList.sumOf { it.toInt() }
                 }
             }
         }
