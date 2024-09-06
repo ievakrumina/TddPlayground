@@ -19,7 +19,7 @@ class StringCalculatorTest {
      * [v] 1. The method can take up to two numbers, separated by commas, and will return their sum as a result.
      * So the inputs can be: “”, “1”, “1,2”. For an empty string, it will return 0.
      *
-     * 2. Allow the add method to handle an unknown number of arguments
+     * [v] 2. Allow the add method to handle an unknown number of arguments
      *
      * 3. Allow the add method to handle newlines as separators, instead of comas
      * “1,2\n3” should return “6”
@@ -65,6 +65,7 @@ class StringCalculatorTest {
             Arguments.of(2, "2"),
             Arguments.of(3, "1,2"),
             Arguments.of(4, "2,2"),
+            Arguments.of(5, "1,1,1,1,1"),
 
         )
     }
