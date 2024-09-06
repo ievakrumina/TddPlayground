@@ -22,7 +22,7 @@ class StringCalculatorTest {
      * [v] 2. Allow the add method to handle an unknown number of arguments
      *
      * 3. Allow the add method to handle newlines as separators, instead of comas
-     * “1,2\n3” should return “6”
+     * [v]“1,2\n3” should return “6”
      * “2,\n3” is invalid, but no need to clarify it with the program
      *
      * 4. Add validation to not to allow a separator at the end
@@ -66,6 +66,7 @@ class StringCalculatorTest {
             Arguments.of(3, "1,2"),
             Arguments.of(4, "2,2"),
             Arguments.of(5, "1,1,1,1,1"),
+            Arguments.of(6, "1,2\n3"),
 
         )
     }
@@ -77,7 +78,7 @@ class StringCalculatorTest {
                 try {
                     number.toInt()
                 } catch(e: NumberFormatException) {
-                    number.split(",").sumOf { it.toInt() }
+                    number.split("[,\n]".toRegex()).sumOf { it.toInt() }
                 }
             }
         }
