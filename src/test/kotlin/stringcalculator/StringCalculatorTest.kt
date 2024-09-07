@@ -74,11 +74,12 @@ class StringCalculatorTest {
         assertEquals(",", getDelimiter("1"))
         assertEquals(",", getDelimiter(","))
         assertEquals(";", getDelimiter("//;\n"))
+        assertEquals("sep", getDelimiter("//sep\n2sep5"))
     }
 
     private fun getDelimiter(input: String): String {
         return when {
-            input.startsWith("//") -> input[2].toString()
+            input.startsWith("//") -> input.substringBefore("\n").substringAfter("//")
             else -> ","
         }
     }
@@ -95,6 +96,7 @@ class StringCalculatorTest {
             Arguments.of(6, "1,2\n3"),
             Arguments.of(4, "//;\n1;3"),
             Arguments.of(6, "//|\n1|2|3"),
+            Arguments.of(7, "//sep\n2sep5"),
         )
 
         @JvmStatic
@@ -110,7 +112,8 @@ class StringCalculatorTest {
             else -> {
                 val delimiter = getDelimiter(input = number)
                 val stripedNumber = number.removePrefix("//$delimiter\n")
-                val inputToList = stripedNumber.split("[$delimiter\n]".toRegex())
+                val adjustedDelimiter = if (delimiter == "|") "\\|" else delimiter
+                val inputToList = stripedNumber.split("(${adjustedDelimiter}|\\n)".toRegex())
                 inputToList
                     .sumOf {
                         try {
