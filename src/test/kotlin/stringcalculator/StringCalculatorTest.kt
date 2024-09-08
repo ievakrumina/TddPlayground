@@ -98,14 +98,14 @@ class StringCalculatorTest {
         )
     }
 
-    //"\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\[\\]\\\\\\|"
     private fun add(number: String): Int {
         return when {
             number == "" -> 0
             else -> {
                 val delimiter = getDelimiter(input = number)
-                val stripedNumber = number.removePrefix("//$delimiter\n")
                 val adjustedDelimiter = if (delimiter.matches("(\\.|\\*|\\+|\\?|\\^|\\$|\\{|\\(|\\)|\\[|\\\\|\\|)".toRegex())) "\\$delimiter" else delimiter
+
+                val stripedNumber = number.removePrefix("//$delimiter\n")
                 val inputToList = stripedNumber.split("(${adjustedDelimiter}|\\n)".toRegex())
                 inputToList
                     .mapIndexed { index, s ->
