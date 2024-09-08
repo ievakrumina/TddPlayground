@@ -38,19 +38,7 @@ class StringCalculatorTest {
      * [v]“//sep\n2sep5” should return “7”
      * [v]“//|\n1|2,3” is invalid and should return an error (or throw an exception) with the message “‘|’ expected
      * but ‘,’ found at position 3.”
-     * []Should make delimiter literal if one of regex escape chars
-     *
-     * STOP HERE if you are a beginner. Continue if you could finish the steps (1-5.) within 30 minutes.
-     *
-     * 6. Calling add with negative numbers will return the message “Negative number(s) not allowed: <negativeNumbers>”
-     * “1,-2” is invalid and should return the message “Negative number(s) not allowed: -2”
-     * “2,-4,-9” is invalid and should return the message “Negative number(s) not allowed: -4, -9”
-     *
-     * 7. Calling add with multiple errors will return all error messages separated by newlines.
-     * “//|\n1|2,-3” is invalid and return the message “Negative number(s) not allowed: -3\n’|’ expected
-     * but ‘,’ found at position 3.”
-     *
-     * 8. Numbers bigger than 1000 should be ignored, so adding 2 + 1001 = 2
+     * [v]Should make delimiter literal if one of regex escape chars
      */
 
     @ParameterizedTest(name = "Should return {0}, when input is {1}")
@@ -98,6 +86,7 @@ class StringCalculatorTest {
             Arguments.of(4, "//;\n1;3"),
             Arguments.of(6, "//|\n1|2|3"),
             Arguments.of(7, "//sep\n2sep5"),
+            Arguments.of(7, "//?\n2?5"),
         )
 
         @JvmStatic
@@ -109,13 +98,14 @@ class StringCalculatorTest {
         )
     }
 
+    //"\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\[\\]\\\\\\|"
     private fun add(number: String): Int {
         return when {
             number == "" -> 0
             else -> {
                 val delimiter = getDelimiter(input = number)
                 val stripedNumber = number.removePrefix("//$delimiter\n")
-                val adjustedDelimiter = if (delimiter == "|") "\\|" else delimiter
+                val adjustedDelimiter = if (delimiter.matches("(\\.|\\*|\\+|\\?|\\^|\\$|\\{|\\(|\\)|\\[|\\\\|\\|)".toRegex())) "\\$delimiter" else delimiter
                 val inputToList = stripedNumber.split("(${adjustedDelimiter}|\\n)".toRegex())
                 inputToList
                     .mapIndexed { index, s ->
