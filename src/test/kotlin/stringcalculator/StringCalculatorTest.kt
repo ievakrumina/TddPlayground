@@ -35,9 +35,10 @@ class StringCalculatorTest {
      * //[delimiter]\n[numbers]
      * [v]“//;\n1;3” should return “4”
      * [v]“//|\n1|2|3” should return “6”
-     * “//sep\n2sep5” should return “7”
-     * “//|\n1|2,3” is invalid and should return an error (or throw an exception) with the message “‘|’ expected
+     * [v]“//sep\n2sep5” should return “7”
+     * [v]“//|\n1|2,3” is invalid and should return an error (or throw an exception) with the message “‘|’ expected
      * but ‘,’ found at position 3.”
+     * []Should make delimiter literal if one of regex escape chars
      *
      * STOP HERE if you are a beginner. Continue if you could finish the steps (1-5.) within 30 minutes.
      *
@@ -52,13 +53,13 @@ class StringCalculatorTest {
      * 8. Numbers bigger than 1000 should be ignored, so adding 2 + 1001 = 2
      */
 
-    @ParameterizedTest(name =  "Should return {0}, when input is {1}")
+    @ParameterizedTest(name = "Should return {0}, when input is {1}")
     @MethodSource("source")
     fun testAdd(expectedResult: Int, input: String) {
         assertEquals(expectedResult, add(number = input))
     }
 
-    @ParameterizedTest(name =  "Should throw error {0}, when input is {1}")
+    @ParameterizedTest(name = "Should throw error {0}, when input is {1}")
     @MethodSource("sourceWithError")
     fun testAddReturnsError(expectedResult: String, input: String) {
 
@@ -103,6 +104,8 @@ class StringCalculatorTest {
         fun sourceWithError() = listOf(
             Arguments.of("Not a number", "1,\n2"),
             Arguments.of("Not a number", "1,2,"),
+            Arguments.of("'|' expected but ',' found at position 3.", "//|\n1|2,3"),
+            Arguments.of("'|' expected but ',' found at position 3.", "//|\n1|23,3"),
         )
     }
 
@@ -115,14 +118,17 @@ class StringCalculatorTest {
                 val adjustedDelimiter = if (delimiter == "|") "\\|" else delimiter
                 val inputToList = stripedNumber.split("(${adjustedDelimiter}|\\n)".toRegex())
                 inputToList
-                    .sumOf {
+                    .mapIndexed { index, s ->
                         try {
-                            it.toInt()
-                        } catch(e: NumberFormatException) {
+                            s.toInt()
+                        } catch (e: NumberFormatException) {
+                            if (s.contains("[0-9]".toRegex())) {
+                                val findChar = Regex("[^0-9]").find(s)?.value
+                                throw Throwable("'$delimiter' expected but '$findChar' found at position ${index + 2}.")
+                            }
                             throw Throwable("Not a number")
                         }
-                    }
-
+                    }.sum()
             }
         }
     }
