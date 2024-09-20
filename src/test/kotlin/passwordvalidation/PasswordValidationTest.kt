@@ -30,12 +30,20 @@ class PasswordValidationTest {
      */
 
     @Test
-    fun shouldReturnTrue_whenPasswordIsAtLeastEightCharacters() {
-        assertEquals(true, passwordValidator("Password@123"))
+    fun shouldReturnSuccess_whenPasswordIsAtLeastEightCharacters() {
+        assertEquals(PasswordValidator.Valid, validatePassword("Password@123"))
     }
 
-    private fun passwordValidator(password: String): Boolean {
-        return password.length >= 8
+    private fun validatePassword(password: String): PasswordValidator {
+        return when {
+            password.length >= 8 -> PasswordValidator.Valid
+            else -> PasswordValidator.Invalid()
+        }
     }
 
+}
+
+sealed class PasswordValidator{
+    data object Valid: PasswordValidator()
+    data class Invalid(val error: String? = null): PasswordValidator()
 }
