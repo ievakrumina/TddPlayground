@@ -49,10 +49,22 @@ class PasswordValidationTest {
         assertEquals(expectedResult, actualResult)
     }
 
+    @Test
+    fun stringContainsNumbers() {
+        assertEquals(0, getNumberCount("abc"))
+        assertEquals(1, getNumberCount("abc1"))
+        assertEquals(2, getNumberCount("2bc1"))
+    }
+
+    private fun getNumberCount(input: String): Int {
+        return input.filter { it.toString().matches("[0-9]".toRegex())}.count()
+    }
+
     companion object {
         @JvmStatic
         fun sourceWithError() = listOf(
-            Arguments.of("Password must be at least 8 characters", "1234567")
+            Arguments.of("Password must be at least 8 characters", "1234567"),
+            //Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
         )
     }
 
