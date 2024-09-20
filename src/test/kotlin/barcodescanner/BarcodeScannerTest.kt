@@ -78,7 +78,7 @@ class BarcodeScannerTest {
     }
 
     private fun formatToPrice(number: Double): String {
-        return "$7.25"
+        return "$$number"
     }
 
     private fun priceToNumber(price: String): Double {
