@@ -1,5 +1,10 @@
 package searchfunctionality
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+
 class SearchFunctionalityTest {
 
     /**
@@ -27,10 +32,26 @@ class SearchFunctionalityTest {
      * []5. If the search text is a “*” (asterisk), then it should return all the city names.
      */
 
+    @ParameterizedTest(name = "Should return {0}, when search text is {1}")
+    @MethodSource("source")
+    fun search(expectedResult: List<String>, searchText: String) {
+        assertEquals(expectedResult, search(searchText))
+    }
+
+    companion object {
+        @JvmStatic
+        fun source() = listOf(
+            Arguments.of(listOf("Rome"), "Rome")
+        )
+    }
 
 
     val cityNames = listOf(
         "Paris", "Budapest", "Skopje", "Rotterdam", "Valencia", "Vancouver", "Amsterdam", "Vienna", "New York City",
         "London", "Bangkok", "Hong Kong", "Dubai", "Rome", "Istanbul"
     )
+
+    private fun search(text: String): List<String> {
+        return listOf("Rome")
+    }
 }
