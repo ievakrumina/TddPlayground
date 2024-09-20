@@ -51,19 +51,8 @@ class PasswordValidationTest {
         assertEquals(expectedResult, actualResult)
     }
 
-    @Test
-    fun stringContainsNumbers() {
-        assertEquals(0, getNumberCount("abc"))
-        assertEquals(1, getNumberCount("abc1"))
-        assertEquals(2, getNumberCount("2bc1"))
-    }
-
-    private fun getNumberCount(input: String): Int {
-        return input.count { it.toString().matches("[0-9]".toRegex()) }
-    }
-
-    private fun getCapitalLetterCount(input: String): Int {
-        return input.count { it.toString().matches("[A-Z]".toRegex()) }
+    private fun getCount(input: String, regex: Regex): Int {
+        return input.count { it.toString().matches(regex) }
     }
 
     companion object {
@@ -80,11 +69,11 @@ class PasswordValidationTest {
         var errors = ""
         val divider = "\n"
         if (password.length < PASSWORD_MIN_LENGTH) errors += "Password must be at least 8 characters"
-        if (getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT) {
+        if (getCount(password, "[0-9]".toRegex()) < PASSWORD_MIN_NUMBER_COUNT) {
             errors = addStringIfNotBlank(errors, divider)
             errors += "The password must contain at least 2 numbers"
         }
-        if (getCapitalLetterCount(password) < PASSWORD_MIN_CAPITAL_LETTER_COUNT) {
+        if (getCount(password, "[A-Z]".toRegex()) < PASSWORD_MIN_CAPITAL_LETTER_COUNT) {
             errors = addStringIfNotBlank(errors, divider)
             errors += "The password must contain at least one capital letter"
         }
