@@ -44,9 +44,9 @@ class PasswordValidationTest {
 
     @ParameterizedTest(name = "Should return error {0}, when input is {1}")
     @MethodSource("sourceWithError")
-    fun validatePassword( expectedResult: String, password: String) {
+    fun validatePassword( expectedError: String, password: String) {
         val actualResult = validatePassword(password)
-        val expectedResult = PasswordValidator.Invalid(expectedResult)
+        val expectedResult = PasswordValidator.Invalid(expectedError)
         assertEquals(expectedResult, actualResult)
     }
 
@@ -66,11 +66,16 @@ class PasswordValidationTest {
         fun sourceWithError() = listOf(
             Arguments.of("Password must be at least 8 characters", "1234567"),
             Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
+            Arguments.of("Password must be at least 8 characters\nThe password must contain at least 2 numbers", "passwor"),
         )
     }
 
     private fun validatePassword(password: String): PasswordValidator {
         return when {
+            getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT
+                    && password.length < PASSWORD_MIN_LENGTH -> {
+                PasswordValidator.Invalid("Password must be at least 8 characters\nThe password must contain at least 2 numbers")
+                    }
             getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT -> PasswordValidator.Invalid("The password must contain at least 2 numbers")
             password.length >= PASSWORD_MIN_LENGTH -> PasswordValidator.Valid
             password.length < PASSWORD_MIN_LENGTH -> PasswordValidator.Invalid("Password must be at least 8 characters")
