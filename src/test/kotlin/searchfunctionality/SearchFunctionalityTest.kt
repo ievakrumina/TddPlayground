@@ -52,6 +52,6 @@ class SearchFunctionalityTest {
     )
 
     private fun search(text: String): List<String> {
-        return listOf("Rome")
+        return cityNames.filter { it == text }
     }
 }
