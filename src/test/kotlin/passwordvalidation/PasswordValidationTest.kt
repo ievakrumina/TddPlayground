@@ -1,5 +1,8 @@
 package passwordvalidation
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
 class PasswordValidationTest {
 
     /**
@@ -25,4 +28,14 @@ class PasswordValidationTest {
      * []5. The password must contain at least one special character. If it is not met,
      * then the following error message should be returned: “password must contain at least one special character”
      */
+
+    @Test
+    fun shouldReturnTrue_whenPasswordIsAtLeastEightCharacters() {
+        assertEquals(true, passwordValidator("Password@123"))
+    }
+
+    private fun passwordValidator(password: String): Boolean {
+        return password.length >= 8
+    }
+
 }
