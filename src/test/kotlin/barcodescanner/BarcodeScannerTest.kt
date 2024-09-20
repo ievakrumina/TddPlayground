@@ -45,6 +45,7 @@ class BarcodeScannerTest {
     @Test
     fun formatNumberToPrice() {
         assertEquals("$7.25", formatToPrice(7.25))
+        assertEquals("$7.00", formatToPrice(7.0))
     }
 
     companion object {
@@ -78,7 +79,7 @@ class BarcodeScannerTest {
     }
 
     private fun formatToPrice(number: Double): String {
-        return "$$number"
+        return "$${"%.2f".format(number)}"
     }
 
     private fun priceToNumber(price: String): Double {
