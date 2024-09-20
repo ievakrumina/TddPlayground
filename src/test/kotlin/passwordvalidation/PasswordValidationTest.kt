@@ -2,6 +2,9 @@ package passwordvalidation
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 class PasswordValidationTest {
 
@@ -34,10 +37,25 @@ class PasswordValidationTest {
         assertEquals(PasswordValidator.Valid, validatePassword("Password@123"))
     }
 
+    @ParameterizedTest(name = "Should return error {0}, when input is {1}")
+    @MethodSource("sourceWithError")
+    fun validatePassword( expectedResult: String, password: String) {
+        val actualResult = validatePassword(password)
+        val expectedResult = PasswordValidator.Invalid(expectedResult)
+        assertEquals(expectedResult, actualResult)
+    }
+
+    companion object {
+        @JvmStatic
+        fun sourceWithError() = listOf(
+            Arguments.of("Password must be at least 8 characters", "1234567")
+        )
+    }
+
     private fun validatePassword(password: String): PasswordValidator {
         return when {
             password.length >= 8 -> PasswordValidator.Valid
-            else -> PasswordValidator.Invalid()
+            else -> PasswordValidator.Invalid("Password must be at least 8 characters")
         }
     }
 
@@ -47,3 +65,5 @@ sealed class PasswordValidator{
     data object Valid: PasswordValidator()
     data class Invalid(val error: String? = null): PasswordValidator()
 }
+
+
