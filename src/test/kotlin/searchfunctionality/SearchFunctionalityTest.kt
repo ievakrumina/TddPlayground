@@ -17,7 +17,7 @@ class SearchFunctionalityTest {
      * , New York City, London, Bangkok, Hong Kong, Dubai, Rome, Istanbul
      *
      * Requirements
-     * []1. If the search text is fewer than 2 characters, then should return no results.
+     * [v]1. If the search text is fewer than 2 characters, then should return no results.
      * (It is an optimization feature of the search functionality.)
      *
      * []2. If the search text is equal to or more than 2 characters, then it should return
@@ -41,7 +41,9 @@ class SearchFunctionalityTest {
     companion object {
         @JvmStatic
         fun source() = listOf(
-            Arguments.of(listOf("Rome"), "Rome")
+            Arguments.of(listOf("Rome"), "Rome"),
+            Arguments.of(emptyList<String>(), "r"),
+            Arguments.of(emptyList<String>(), ""),
         )
     }
 
