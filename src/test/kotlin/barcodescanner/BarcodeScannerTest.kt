@@ -1,6 +1,7 @@
 package barcodescanner
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -16,7 +17,7 @@ class BarcodeScannerTest {
      *
      * [v]3. Barcode ‘99999’ should display ‘Error: barcode not found’
      *
-     * []4. Empty barcode should display ‘Error: empty barcode’
+     * [v]4. Empty barcode should display ‘Error: empty barcode’
      *
      * []5. Introduce a concept of total command where it is possible to scan multiple items.
      * The command would display the sum of the scanned product prices
@@ -28,6 +29,22 @@ class BarcodeScannerTest {
         assertEquals(expectedPrice, scanBarcode(barcode = barcode))
     }
 
+    @ParameterizedTest(name = "Should display total {0}, when these barcodes are scanned {1}")
+    @MethodSource("totalSource")
+    fun testScanMultipleBarcodes(expectedTotal: String, barcodes: List<String>) {
+        assertEquals(expectedTotal, scanMultipleBarcodes(barcodes))
+    }
+
+    @Test
+    fun convertPriceToNumber() {
+        assertEquals(7.25, priceToNumber("$7.25"))
+    }
+
+    private fun priceToNumber(price: String): Double {
+        return 7.25
+    }
+
+
     companion object {
         @JvmStatic
         fun source() = listOf(
@@ -36,6 +53,15 @@ class BarcodeScannerTest {
             Arguments.of("Error: barcode not found", "999999"),
             Arguments.of("Error: empty barcode", ""),
         )
+
+        @JvmStatic
+        fun totalSource() = listOf(
+            Arguments.of("$7.25", listOf("12345")),
+        )
+    }
+
+    private fun scanMultipleBarcodes(barcodes: List<String>): String {
+        return "$7.25"
     }
 
     private fun scanBarcode(barcode: String): String {
