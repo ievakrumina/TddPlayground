@@ -19,7 +19,7 @@ class BarcodeScannerTest {
      *
      * [v]4. Empty barcode should display ‘Error: empty barcode’
      *
-     * []5. Introduce a concept of total command where it is possible to scan multiple items.
+     * [v]5. Introduce a concept of total command where it is possible to scan multiple items.
      * The command would display the sum of the scanned product prices
      */
 
@@ -60,12 +60,13 @@ class BarcodeScannerTest {
         @JvmStatic
         fun totalSource() = listOf(
             Arguments.of("$7.25", listOf("12345")),
-            //Arguments.of("$19.75", listOf("12345", "23456")),
+            Arguments.of("$19.75", listOf("12345", "23456")),
         )
     }
 
     private fun scanMultipleBarcodes(barcodes: List<String>): String {
-        return "$7.25"
+        val total = barcodes.map { scanBarcode(it) }.sumOf { priceToNumber(it) }
+        return formatToPrice(total)
     }
 
     private fun scanBarcode(barcode: String): String {
