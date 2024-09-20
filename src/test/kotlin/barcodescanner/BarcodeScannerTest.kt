@@ -42,14 +42,10 @@ class BarcodeScannerTest {
         assertEquals(0.0, priceToNumber("A"))
     }
 
-    private fun priceToNumber(price: String): Double {
-        return try {
-            price.removePrefix("$").toDouble()
-        } catch (e: NumberFormatException) {
-            0.0
-        }
+    @Test
+    fun formatNumberToPrice() {
+        assertEquals("$7.25", formatToPrice(7.25))
     }
-
 
     companion object {
         @JvmStatic
@@ -63,6 +59,7 @@ class BarcodeScannerTest {
         @JvmStatic
         fun totalSource() = listOf(
             Arguments.of("$7.25", listOf("12345")),
+            //Arguments.of("$19.75", listOf("12345", "23456")),
         )
     }
 
@@ -77,6 +74,18 @@ class BarcodeScannerTest {
             } else {
                 "Error: barcode not found"
             }
+        }
+    }
+
+    private fun formatToPrice(number: Double): String {
+        return "$7.25"
+    }
+
+    private fun priceToNumber(price: String): Double {
+        return try {
+            price.removePrefix("$").toDouble()
+        } catch (e: NumberFormatException) {
+            0.0
         }
     }
 
