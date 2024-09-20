@@ -24,7 +24,7 @@ class PasswordValidationTest {
      * [v]2. The password must contain at least 2 numbers. If it is not met,
      * then the following error message should be returned: “The password must contain at least 2 numbers”
      *
-     * []3. The validation function should handle multiple validation errors.
+     * [v]3. The validation function should handle multiple validation errors.
      * For example, “somepassword” should an error message:
      * “Password must be at least 8 characters\nThe password must contain at least 2 numbers”
      *
@@ -71,18 +71,15 @@ class PasswordValidationTest {
     }
 
     private fun validatePassword(password: String): PasswordValidator {
-        return when {
-            getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT
-                    && password.length < PASSWORD_MIN_LENGTH -> {
-                PasswordValidator.Invalid("Password must be at least 8 characters\nThe password must contain at least 2 numbers")
-                    }
-            getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT -> PasswordValidator.Invalid("The password must contain at least 2 numbers")
-            password.length >= PASSWORD_MIN_LENGTH -> PasswordValidator.Valid
-            password.length < PASSWORD_MIN_LENGTH -> PasswordValidator.Invalid("Password must be at least 8 characters")
-            else -> PasswordValidator.Invalid()
+        var errors: String = ""
+        val divider = "\n"
+        if (password.length < PASSWORD_MIN_LENGTH) errors += "Password must be at least 8 characters"
+        if (getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT) {
+            if (errors.isNotBlank()) errors += divider
+            errors += "The password must contain at least 2 numbers"
         }
+        return if (errors.isBlank()) PasswordValidator.Valid else PasswordValidator.Invalid(errors)
     }
-
 }
 
 sealed class PasswordValidator{
