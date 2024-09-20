@@ -57,7 +57,7 @@ class PasswordValidationTest {
     }
 
     private fun getNumberCount(input: String): Int {
-        return input.filter { it.toString().matches("[0-9]".toRegex())}.count()
+        return input.count { it.toString().matches("[0-9]".toRegex()) }
     }
 
     companion object {
