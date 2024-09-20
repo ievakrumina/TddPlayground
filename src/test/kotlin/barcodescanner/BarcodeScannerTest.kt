@@ -42,7 +42,7 @@ class BarcodeScannerTest {
     }
 
     private fun priceToNumber(price: String): Double {
-        return if (price == "$7.25") 7.25 else 7.20
+        return price.removePrefix("$").toDouble()
     }
 
 
