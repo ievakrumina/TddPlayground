@@ -20,7 +20,7 @@ class SearchFunctionalityTest {
      * [v]1. If the search text is fewer than 2 characters, then should return no results.
      * (It is an optimization feature of the search functionality.)
      *
-     * []2. If the search text is equal to or more than 2 characters, then it should return
+     * [v]2. If the search text is equal to or more than 2 characters, then it should return
      * all the city names starting with the exact search text.
      * For example for search text “Va”, the function should return Valencia and Vancouver
      *
@@ -42,8 +42,9 @@ class SearchFunctionalityTest {
         @JvmStatic
         fun source() = listOf(
             Arguments.of(listOf("Rome"), "Rome"),
-            Arguments.of(emptyList<String>(), "r"),
+            Arguments.of(emptyList<String>(), "R"),
             Arguments.of(emptyList<String>(), ""),
+            Arguments.of(listOf("Valencia", "Vancouver"), "Va"),
         )
     }
 
@@ -54,6 +55,10 @@ class SearchFunctionalityTest {
     )
 
     private fun search(text: String): List<String> {
-        return cityNames.filter { it == text }
+        return if (text.length < 2) {
+            emptyList()
+        } else {
+            cityNames.filter { it.startsWith(text) }
+        }
     }
 }
