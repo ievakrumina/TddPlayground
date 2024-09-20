@@ -32,7 +32,7 @@ class PasswordValidationTest {
      * [v] 4. The password must contain at least one capital letter. If it is not met,
      * then the following error message should be returned: “password must contain at least one capital letter”
      *
-     * []5. The password must contain at least one special character. If it is not met,
+     * [v]5. The password must contain at least one special character. If it is not met,
      * then the following error message should be returned: “password must contain at least one special character”
      */
 
@@ -51,13 +51,6 @@ class PasswordValidationTest {
         assertEquals(expectedResult, actualResult)
     }
 
-    @Test
-    fun getSpecialCharacterCount() {
-        assertEquals(0, getCount("abc123", "[^A-Za-z0-9]".toRegex()))
-        assertEquals(1, getCount("!bc123", "[^A-Za-z0-9]".toRegex()))
-        assertEquals(2, getCount("!#c123", "[^A-Za-z0-9]".toRegex()))
-    }
-
     private fun getCount(input: String, regex: Regex): Int {
         return input.count { it.toString().matches(regex) }
     }
@@ -65,10 +58,11 @@ class PasswordValidationTest {
     companion object {
         @JvmStatic
         fun sourceWithError() = listOf(
-            Arguments.of("Password must be at least 8 characters", "A234567"),
-            Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
-            Arguments.of("Password must be at least 8 characters\nThe password must contain at least 2 numbers", "Passwor"),
-            Arguments.of("The password must contain at least one capital letter", "abcdefg78"),
+            Arguments.of("Password must be at least 8 characters", "A2345(7"),
+            Arguments.of("The password must contain at least 2 numbers", "Abcdef$7"),
+            Arguments.of("Password must be at least 8 characters\nThe password must contain at least 2 numbers", "Passw#r"),
+            Arguments.of("The password must contain at least one capital letter", "abcdefg78#"),
+            Arguments.of("The password must contain at least one special character", "Abcdefg78"),
         )
     }
 
@@ -83,6 +77,10 @@ class PasswordValidationTest {
         if (getCount(password, "[A-Z]".toRegex()) < PASSWORD_MIN_CAPITAL_LETTER_COUNT) {
             errors = addStringIfNotBlank(errors, divider)
             errors += "The password must contain at least one capital letter"
+        }
+        if (getCount(password, "[^A-Za-z0-9]".toRegex()) < PASSWORD_MIN_CAPITAL_LETTER_COUNT) {
+            errors = addStringIfNotBlank(errors, divider)
+            errors += "The password must contain at least one special character"
         }
         return if (errors.isBlank()) PasswordValidator.Valid else PasswordValidator.Invalid(errors)
     }
