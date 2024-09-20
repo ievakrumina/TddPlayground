@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 const val PASSWORD_MIN_LENGTH = 8
+const val PASSWORD_MIN_NUMBER_COUNT = 2
 
 class PasswordValidationTest {
 
@@ -20,7 +21,7 @@ class PasswordValidationTest {
      * [v]1. The password must be at least 8 characters long. If it is not met,
      * then the following error message should be returned: “Password must be at least 8 characters”
      *
-     * []2. The password must contain at least 2 numbers. If it is not met,
+     * [v]2. The password must contain at least 2 numbers. If it is not met,
      * then the following error message should be returned: “The password must contain at least 2 numbers”
      *
      * []3. The validation function should handle multiple validation errors.
@@ -64,12 +65,13 @@ class PasswordValidationTest {
         @JvmStatic
         fun sourceWithError() = listOf(
             Arguments.of("Password must be at least 8 characters", "1234567"),
-            //Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
+            Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
         )
     }
 
     private fun validatePassword(password: String): PasswordValidator {
         return when {
+            getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT -> PasswordValidator.Invalid("The password must contain at least 2 numbers")
             password.length >= PASSWORD_MIN_LENGTH -> PasswordValidator.Valid
             password.length < PASSWORD_MIN_LENGTH -> PasswordValidator.Invalid("Password must be at least 8 characters")
             else -> PasswordValidator.Invalid()
