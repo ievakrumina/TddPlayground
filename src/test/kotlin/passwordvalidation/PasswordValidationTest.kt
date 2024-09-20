@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource
 
 const val PASSWORD_MIN_LENGTH = 8
 const val PASSWORD_MIN_NUMBER_COUNT = 2
+const val PASSWORD_MIN_CAPITAL_LETTER_COUNT = 1
 
 class PasswordValidationTest {
 
@@ -61,24 +62,39 @@ class PasswordValidationTest {
         return input.count { it.toString().matches("[0-9]".toRegex()) }
     }
 
+    private fun getCapitalLetterCount(input: String): Int {
+        return input.count { it.toString().matches("[A-Z]".toRegex()) }
+    }
+
     companion object {
         @JvmStatic
         fun sourceWithError() = listOf(
-            Arguments.of("Password must be at least 8 characters", "1234567"),
+            Arguments.of("Password must be at least 8 characters", "A234567"),
             Arguments.of("The password must contain at least 2 numbers", "Abcdefg7"),
-            Arguments.of("Password must be at least 8 characters\nThe password must contain at least 2 numbers", "passwor"),
+            Arguments.of("Password must be at least 8 characters\nThe password must contain at least 2 numbers", "Passwor"),
+            Arguments.of("The password must contain at least one capital letter", "abcdefg78"),
         )
     }
 
     private fun validatePassword(password: String): PasswordValidator {
-        var errors: String = ""
+        var errors = ""
         val divider = "\n"
         if (password.length < PASSWORD_MIN_LENGTH) errors += "Password must be at least 8 characters"
         if (getNumberCount(password) < PASSWORD_MIN_NUMBER_COUNT) {
-            if (errors.isNotBlank()) errors += divider
+            errors = addStringIfNotBlank(errors, divider)
             errors += "The password must contain at least 2 numbers"
         }
+        if (getCapitalLetterCount(password) < PASSWORD_MIN_CAPITAL_LETTER_COUNT) {
+            errors = addStringIfNotBlank(errors, divider)
+            errors += "The password must contain at least one capital letter"
+        }
         return if (errors.isBlank()) PasswordValidator.Valid else PasswordValidator.Invalid(errors)
+    }
+
+    private fun addStringIfNotBlank(input: String, stringToAdd: String): String {
+        var str = input
+        if (str.isNotBlank()) str += stringToAdd
+        return str
     }
 }
 
