@@ -39,10 +39,15 @@ class BarcodeScannerTest {
     fun convertPriceToNumber() {
         assertEquals(7.25, priceToNumber("$7.25"))
         assertEquals(7.20, priceToNumber("$7.20"))
+        assertEquals(0.0, priceToNumber("A"))
     }
 
     private fun priceToNumber(price: String): Double {
-        return price.removePrefix("$").toDouble()
+        return try {
+            price.removePrefix("$").toDouble()
+        } catch (e: NumberFormatException) {
+            0.0
+        }
     }
 
 
