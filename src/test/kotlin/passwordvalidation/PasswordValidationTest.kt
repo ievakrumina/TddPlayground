@@ -29,7 +29,7 @@ class PasswordValidationTest {
      * For example, “somepassword” should an error message:
      * “Password must be at least 8 characters\nThe password must contain at least 2 numbers”
      *
-     * [] 4. The password must contain at least one capital letter. If it is not met,
+     * [v] 4. The password must contain at least one capital letter. If it is not met,
      * then the following error message should be returned: “password must contain at least one capital letter”
      *
      * []5. The password must contain at least one special character. If it is not met,
@@ -49,6 +49,13 @@ class PasswordValidationTest {
         val actualResult = validatePassword(password)
         val expectedResult = PasswordValidator.Invalid(expectedError)
         assertEquals(expectedResult, actualResult)
+    }
+
+    @Test
+    fun getSpecialCharacterCount() {
+        assertEquals(0, getCount("abc123", "[^A-Za-z0-9]".toRegex()))
+        assertEquals(1, getCount("!bc123", "[^A-Za-z0-9]".toRegex()))
+        assertEquals(2, getCount("!#c123", "[^A-Za-z0-9]".toRegex()))
     }
 
     private fun getCount(input: String, regex: Regex): Int {
