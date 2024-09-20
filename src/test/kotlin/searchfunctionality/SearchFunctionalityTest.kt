@@ -29,7 +29,7 @@ class SearchFunctionalityTest {
      * [v]4. The search functionality should work also when the search text is just a part of a city name
      * For example “ape” should return “Budapest” city
      *
-     * []5. If the search text is a “*” (asterisk), then it should return all the city names.
+     * [v]5. If the search text is a “*” (asterisk), then it should return all the city names.
      */
 
     @ParameterizedTest(name = "Should return {0}, when search text is {1}")
@@ -47,6 +47,10 @@ class SearchFunctionalityTest {
             Arguments.of(listOf("Valencia", "Vancouver"), "Va"),
             Arguments.of(listOf("Valencia", "Vancouver"), "va"),
             Arguments.of(listOf("Budapest"), "ape"),
+            Arguments.of(listOf(
+                "Paris", "Budapest", "Skopje", "Rotterdam", "Valencia", "Vancouver", "Amsterdam", "Vienna", "New York City",
+                "London", "Bangkok", "Hong Kong", "Dubai", "Rome", "Istanbul"
+            ), "*"),
         )
     }
 
@@ -57,10 +61,10 @@ class SearchFunctionalityTest {
     )
 
     private fun search(text: String): List<String> {
-        return if (text.length < 2) {
-            emptyList()
-        } else {
-            cityNames.filter { it.lowercase().contains(text.lowercase()) }
+        return when {
+            text == "*" -> cityNames
+            text.length < 2 -> emptyList()
+            else -> cityNames.filter { it.lowercase().contains(text.lowercase()) }
         }
     }
 }
