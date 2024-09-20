@@ -12,7 +12,7 @@ class BarcodeScannerTest {
      * Requirements
      * [v]1. Barcode ‘12345’ should display price ‘$7.25’
      *
-     * []2. Barcode ‘23456’ should display price ‘$12.50’
+     * [v]2. Barcode ‘23456’ should display price ‘$12.50’
      *
      * []3. Barcode ‘99999’ should display ‘Error: barcode not found’
      *
@@ -37,10 +37,11 @@ class BarcodeScannerTest {
     }
 
     private fun scanBarcode(barcode: String): String {
-        return when(barcode) {
-            "12345" ->"$7.25"
-            "23456" -> "$12.50"
-            else -> ""
-        }
+        return validBarcodePriceMap[barcode].orEmpty()
     }
+
+    val validBarcodePriceMap = mapOf(
+        Pair("12345", "$7.25"),
+        Pair("23456", "$12.50")
+    )
 }
