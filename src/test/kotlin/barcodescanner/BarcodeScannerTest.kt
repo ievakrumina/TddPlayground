@@ -33,11 +33,14 @@ class BarcodeScannerTest {
         fun source() = listOf(
             Arguments.of("$7.25", "12345"),
             Arguments.of("$12.50", "23456"),
+            Arguments.of("Error: barcode not found", "999999"),
         )
     }
 
     private fun scanBarcode(barcode: String): String {
-        return validBarcodePriceMap[barcode].orEmpty()
+        return validBarcodePriceMap.getOrElse(barcode) {
+            "Error: barcode not found"
+        }
     }
 
     val validBarcodePriceMap = mapOf(
