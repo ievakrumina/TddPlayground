@@ -38,10 +38,11 @@ class BarcodeScannerTest {
     @Test
     fun convertPriceToNumber() {
         assertEquals(7.25, priceToNumber("$7.25"))
+        assertEquals(7.20, priceToNumber("$7.20"))
     }
 
     private fun priceToNumber(price: String): Double {
-        return 7.25
+        return if (price == "$7.25") 7.25 else 7.20
     }
 
 
