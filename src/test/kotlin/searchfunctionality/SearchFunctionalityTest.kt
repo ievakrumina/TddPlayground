@@ -24,7 +24,7 @@ class SearchFunctionalityTest {
      * all the city names starting with the exact search text.
      * For example for search text “Va”, the function should return Valencia and Vancouver
      *
-     * []3. The search functionality should be case insensitive
+     * [v]3. The search functionality should be case insensitive
      *
      * []4. The search functionality should work also when the search text is just a part of a city name
      * For example “ape” should return “Budapest” city
@@ -42,9 +42,10 @@ class SearchFunctionalityTest {
         @JvmStatic
         fun source() = listOf(
             Arguments.of(listOf("Rome"), "Rome"),
-            Arguments.of(emptyList<String>(), "R"),
+            Arguments.of(emptyList<String>(), "r"),
             Arguments.of(emptyList<String>(), ""),
             Arguments.of(listOf("Valencia", "Vancouver"), "Va"),
+            Arguments.of(listOf("Valencia", "Vancouver"), "va"),
         )
     }
 
@@ -58,7 +59,7 @@ class SearchFunctionalityTest {
         return if (text.length < 2) {
             emptyList()
         } else {
-            cityNames.filter { it.startsWith(text) }
+            cityNames.filter { it.lowercase().startsWith(text.lowercase()) }
         }
     }
 }
