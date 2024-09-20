@@ -10,7 +10,7 @@ class BarcodeScannerTest {
      * Create a simple app for scanning bar codes to sell products.
      *
      * Requirements
-     * []1. Barcode ‘12345’ should display price ‘$7.25’
+     * [v]1. Barcode ‘12345’ should display price ‘$7.25’
      *
      * []2. Barcode ‘23456’ should display price ‘$12.50’
      *
@@ -31,11 +31,16 @@ class BarcodeScannerTest {
     companion object {
         @JvmStatic
         fun source() = listOf(
-            Arguments.of("$7.25", "12345")
+            Arguments.of("$7.25", "12345"),
+            Arguments.of("$12.50", "23456"),
         )
     }
 
     private fun scanBarcode(barcode: String): String {
-        return "$7.25"
+        return when(barcode) {
+            "12345" ->"$7.25"
+            "23456" -> "$12.50"
+            else -> ""
+        }
     }
 }
