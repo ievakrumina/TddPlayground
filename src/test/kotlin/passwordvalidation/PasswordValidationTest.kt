@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
+const val PASSWORD_MIN_LENGTH = 8
+
 class PasswordValidationTest {
 
     /**
@@ -15,7 +17,7 @@ class PasswordValidationTest {
      * and also a field with the possible validation errors.
      *
      * Requirements
-     * []1. The password must be at least 8 characters long. If it is not met,
+     * [v]1. The password must be at least 8 characters long. If it is not met,
      * then the following error message should be returned: “Password must be at least 8 characters”
      *
      * []2. The password must contain at least 2 numbers. If it is not met,
@@ -31,6 +33,8 @@ class PasswordValidationTest {
      * []5. The password must contain at least one special character. If it is not met,
      * then the following error message should be returned: “password must contain at least one special character”
      */
+
+
 
     @Test
     fun shouldReturnSuccess_whenPasswordIsAtLeastEightCharacters() {
@@ -54,8 +58,9 @@ class PasswordValidationTest {
 
     private fun validatePassword(password: String): PasswordValidator {
         return when {
-            password.length >= 8 -> PasswordValidator.Valid
-            else -> PasswordValidator.Invalid("Password must be at least 8 characters")
+            password.length >= PASSWORD_MIN_LENGTH -> PasswordValidator.Valid
+            password.length < PASSWORD_MIN_LENGTH -> PasswordValidator.Invalid("Password must be at least 8 characters")
+            else -> PasswordValidator.Invalid()
         }
     }
 
