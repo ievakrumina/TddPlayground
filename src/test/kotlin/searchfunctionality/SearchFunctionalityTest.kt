@@ -26,7 +26,7 @@ class SearchFunctionalityTest {
      *
      * [v]3. The search functionality should be case insensitive
      *
-     * []4. The search functionality should work also when the search text is just a part of a city name
+     * [v]4. The search functionality should work also when the search text is just a part of a city name
      * For example “ape” should return “Budapest” city
      *
      * []5. If the search text is a “*” (asterisk), then it should return all the city names.
@@ -46,6 +46,7 @@ class SearchFunctionalityTest {
             Arguments.of(emptyList<String>(), ""),
             Arguments.of(listOf("Valencia", "Vancouver"), "Va"),
             Arguments.of(listOf("Valencia", "Vancouver"), "va"),
+            Arguments.of(listOf("Budapest"), "ape"),
         )
     }
 
@@ -59,7 +60,7 @@ class SearchFunctionalityTest {
         return if (text.length < 2) {
             emptyList()
         } else {
-            cityNames.filter { it.lowercase().startsWith(text.lowercase()) }
+            cityNames.filter { it.lowercase().contains(text.lowercase()) }
         }
     }
 }
