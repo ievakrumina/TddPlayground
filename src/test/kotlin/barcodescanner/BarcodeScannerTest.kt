@@ -14,7 +14,7 @@ class BarcodeScannerTest {
      *
      * [v]2. Barcode ‘23456’ should display price ‘$12.50’
      *
-     * []3. Barcode ‘99999’ should display ‘Error: barcode not found’
+     * [v]3. Barcode ‘99999’ should display ‘Error: barcode not found’
      *
      * []4. Empty barcode should display ‘Error: empty barcode’
      *
@@ -34,12 +34,17 @@ class BarcodeScannerTest {
             Arguments.of("$7.25", "12345"),
             Arguments.of("$12.50", "23456"),
             Arguments.of("Error: barcode not found", "999999"),
+            Arguments.of("Error: empty barcode", ""),
         )
     }
 
     private fun scanBarcode(barcode: String): String {
         return validBarcodePriceMap.getOrElse(barcode) {
-            "Error: barcode not found"
+            if (barcode.isBlank()) {
+                "Error: empty barcode"
+            } else {
+                "Error: barcode not found"
+            }
         }
     }
 
